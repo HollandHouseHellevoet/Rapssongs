@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>RojasReport — Intelligence Console (mockup)</title>
+<title>RojasReport — Standing Intelligence on American Healthcare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0A0A0B; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
-    --accent:#FF6A1F; --live:#4ADE80; --alert:#EF4444;
+    --accent:#FF6A1F;
     --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
     --mono:'Geist Mono',ui-monospace,Menlo,monospace;
     --serif:'Fraunces',ui-serif,Georgia,serif;
@@ -26,71 +26,97 @@
   .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
   .brand .mark span{transform:rotate(-45deg)}
   .nav{display:flex;gap:22px}
-  .nav a{font-size:13px;color:var(--dim)}
-  .nav a:hover{color:var(--fg)}
+  .nav a{font-size:13px;color:var(--dim)} .nav a:hover{color:var(--fg)}
   .cmdk{font-family:var(--mono);font-size:11px;border:1px solid var(--line);padding:6px 10px;border-radius:6px;color:var(--dim)}
   .cmdk kbd{background:#1a1a1b;padding:1px 6px;border-radius:3px;margin-left:6px;color:var(--fg)}
 
-  .ticker{display:flex;align-items:center;gap:14px;padding:8px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
-  .ticker .dot{width:6px;height:6px;border-radius:50%;background:var(--live);box-shadow:0 0 8px var(--live)}
-  .ticker-track{display:flex;gap:48px;white-space:nowrap;animation:scroll 60s linear infinite}
-  .ticker-track span b{color:var(--fg);font-weight:500}
-  .ticker-track span em{color:var(--accent);font-style:normal}
+  /* Question strip — replaces the "breaking news" ticker */
+  .querybar{display:flex;align-items:center;gap:14px;padding:10px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
+  .querybar .q{color:var(--accent);font-weight:500;margin-right:14px;letter-spacing:.1em}
+  .query-track{display:flex;gap:44px;white-space:nowrap;animation:scroll 80s linear infinite}
+  .query-track span b{color:var(--fg);font-weight:500;font-family:var(--sans);font-size:12px;text-transform:none;letter-spacing:normal}
+  .query-track span em{color:var(--accent);font-style:normal;margin-right:8px}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  .hero{position:relative;padding:72px 28px 56px;border-bottom:1px solid var(--line);overflow:hidden}
+  .hero{position:relative;padding:96px 28px 72px;border-bottom:1px solid var(--line);overflow:hidden}
   .hero::before{content:"";position:absolute;inset:0;background:
-    radial-gradient(1200px 400px at 75% 20%,rgba(255,106,31,.18),transparent 60%),
-    radial-gradient(800px 300px at 10% 90%,rgba(255,106,31,.08),transparent 60%);
+    radial-gradient(1200px 400px at 72% 25%,rgba(255,106,31,.16),transparent 60%),
+    radial-gradient(800px 300px at 10% 90%,rgba(255,106,31,.06),transparent 60%);
     pointer-events:none}
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);opacity:.4;pointer-events:none}
-  .hero-inner{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:end}
-  .kicker{display:flex;gap:10px;align-items:center;margin-bottom:20px}
-  .kicker .pill{border:1px solid var(--accent);color:var(--accent);padding:3px 8px;border-radius:999px;font-family:var(--mono);font-size:10px;letter-spacing:.1em}
-  h1.display{font-family:var(--serif);font-weight:600;font-size:clamp(44px,6vw,88px);line-height:.96;letter-spacing:-.02em;margin:0 0 24px}
+  .hero-inner{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:56px;align-items:end}
+  .kicker{display:flex;gap:10px;align-items:center;margin-bottom:22px;flex-wrap:wrap}
+  .kicker .pill{border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;letter-spacing:.1em}
+  h1.display{font-family:var(--serif);font-weight:600;font-size:clamp(44px,5.6vw,82px);line-height:.98;letter-spacing:-.02em;margin:0 0 24px;max-width:820px}
   h1.display em{font-style:italic;color:var(--accent)}
-  .lede{font-size:18px;color:var(--dim);max-width:560px;line-height:1.5}
-  .cta{display:flex;gap:12px;margin-top:28px}
+  .lede{font-size:18px;color:var(--dim);max-width:560px;line-height:1.55}
+  .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
   .btn{padding:12px 18px;border:1px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;cursor:pointer}
   .btn.primary{background:var(--accent);border-color:var(--accent);color:#0A0A0B;font-weight:600}
   .btn:hover{transform:translateY(-1px);transition:transform .2s}
 
-  .hud{border:1px solid var(--line);border-radius:10px;padding:18px;background:rgba(255,255,255,.02)}
-  .hud-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-  .hud-head .live{color:var(--live);display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px}
-  .hud-head .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--live);animation:pulse 1.4s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .hud-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
-  .hud-row:first-of-type{border-top:none}
-  .hud-row .src{font-family:var(--mono);font-size:10px;color:var(--dim)}
-  .hud-row b{font-weight:500}
+  /* Entity panel — the "what we actually know" panel */
+  .entity{border:1px solid var(--line);border-radius:10px;padding:0;background:rgba(255,255,255,.02);overflow:hidden}
+  .entity-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+  .entity-head .label{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.12em}
+  .entity-head .updated{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em}
+  .entity-title{padding:18px;border-bottom:1px solid var(--line)}
+  .entity-title h4{margin:0 0 4px;font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .entity-title .sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
+  .entity-body{padding:18px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
+  .row:first-of-type{border-top:none}
+  .row .k{color:var(--dim)}
+  .row .v{font-family:var(--mono);font-size:12px;color:var(--fg)}
+  .row .v.accent{color:var(--accent)}
+  .entity-foot{padding:12px 18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
 
-  .section{padding:72px 28px;border-bottom:1px solid var(--line)}
-  .section-head{max-width:1240px;margin:0 auto 28px;display:flex;justify-content:space-between;align-items:end}
-  .section-head h2{font-family:var(--serif);font-size:40px;font-weight:600;margin:0;letter-spacing:-.015em}
-  .desks{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  .desk{position:relative;border:1px solid var(--line);border-radius:10px;padding:20px;aspect-ratio:1/1.15;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden;cursor:pointer}
-  .desk:hover{transform:translateY(-4px);border-color:rgba(255,106,31,.5);box-shadow:0 20px 40px -20px rgba(255,106,31,.25)}
+  /* Personas section */
+  .section{padding:96px 28px;border-bottom:1px solid var(--line)}
+  .section-head{max-width:1240px;margin:0 auto 40px}
+  .section-head .mono{margin-bottom:12px;display:block}
+  .section-head h2{font-family:var(--serif);font-size:44px;font-weight:600;margin:0;letter-spacing:-.015em;max-width:780px;line-height:1.1}
+  .section-head h2 em{font-style:italic;color:var(--accent)}
+  .section-head p{color:var(--dim);font-size:17px;line-height:1.5;max-width:640px;margin:16px 0 0}
+
+  .personas{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .persona{border:1px solid var(--line);border-radius:12px;padding:32px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);transition:border-color .25s,transform .25s;cursor:pointer;position:relative;overflow:hidden}
+  .persona:hover{border-color:rgba(255,106,31,.4);transform:translateY(-2px)}
+  .persona::after{content:"";position:absolute;inset:auto -20% -40% auto;width:60%;height:60%;background:radial-gradient(circle,rgba(255,106,31,.18),transparent 60%);opacity:0;transition:opacity .3s}
+  .persona:hover::after{opacity:1}
+  .persona .id{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em;margin-bottom:14px}
+  .persona h3{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.01em;margin:0 0 14px;line-height:1.1}
+  .persona h3 em{font-style:italic;color:var(--accent)}
+  .persona .q{font-family:var(--serif);font-size:17px;font-style:italic;color:var(--fg);line-height:1.45;margin:0 0 20px;padding:0 0 0 16px;border-left:2px solid var(--accent)}
+  .persona .answer{font-size:13px;color:var(--dim);line-height:1.55;margin:0}
+  .persona .cta{display:flex;align-items:center;gap:10px;margin-top:22px;font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.12em}
+  .persona .cta::after{content:"→";font-size:14px}
+
+  /* Desks grid */
+  .desks{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .desk{position:relative;border:1px solid var(--line);border-radius:10px;padding:20px;min-height:200px;background:linear-gradient(180deg,rgba(255,255,255,.03),transparent);display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s,border-color .25s,box-shadow .25s;overflow:hidden;cursor:pointer}
+  .desk:hover{transform:translateY(-3px);border-color:rgba(255,106,31,.5);box-shadow:0 20px 40px -20px rgba(255,106,31,.25)}
   .desk::after{content:"";position:absolute;inset:auto -40% -40% auto;width:80%;height:80%;background:radial-gradient(circle,rgba(255,106,31,.18),transparent 60%);opacity:0;transition:opacity .3s}
   .desk:hover::after{opacity:1}
   .desk .id{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.12em}
-  .desk .name{font-family:var(--serif);font-size:26px;font-weight:600;line-height:1.05;margin:8px 0 4px}
+  .desk .name{font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.1;margin:8px 0 4px}
   .desk .tag{font-size:12px;color:var(--dim);line-height:1.4}
   .desk .meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:10px;color:var(--dim);position:relative;z-index:1}
-  .desk .meta .on{color:var(--live)}
+  .desk .meta .on{color:var(--accent)}
 
-  .dossiers{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
-  .dossier{border-top:1px solid var(--line);padding-top:20px;cursor:pointer}
+  /* Dossiers editorial */
+  .dossiers{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:28px}
+  .dossier{border-top:1px solid var(--line);padding-top:22px;cursor:pointer}
   .dossier:hover h3{color:var(--accent);transition:color .2s}
-  .dossier h3{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.12;margin:10px 0 8px;letter-spacing:-.01em}
-  .dossier.lead h3{font-size:44px}
+  .dossier h3{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.12;margin:10px 0 10px;letter-spacing:-.01em}
+  .dossier.lead h3{font-size:42px}
   .dossier p{color:var(--dim);font-size:14px;line-height:1.55;margin:0}
-  .dossier .byline{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:10px}
+  .dossier .byline{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:12px;letter-spacing:.08em}
 
-  footer{padding:40px 28px;display:flex;justify-content:space-between;color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+  footer{padding:48px 28px;display:flex;justify-content:space-between;color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.08em}
 
   @media (max-width:900px){
-    .hero-inner,.desks,.dossiers{grid-template-columns:1fr}
+    .hero-inner,.desks,.dossiers,.personas{grid-template-columns:1fr}
     .nav{display:none}
   }
 </style>
@@ -100,23 +126,22 @@
   <header class="top">
     <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
     <nav class="nav">
-      <a>Console</a><a>Desks</a><a>Dossiers</a><a>Live</a><a>About</a>
+      <a>The Desks</a><a>Dossiers</a><a>Registries</a><a>Method</a><a>About</a>
     </nav>
-    <div class="cmdk">Search <kbd>⌘K</kbd></div>
+    <div class="cmdk">Look up an entity <kbd>⌘K</kbd></div>
   </header>
 
-  <div class="ticker">
-    <span class="dot"></span>
-    <span class="mono">LIVE // GLOBAL INTEL FEED</span>
-    <div class="ticker-track">
-      <span><em>WAYSANDMEANS //</em> <b>Markup scheduled</b> on HR 4183 — 09:00 ET</span>
-      <span><em>POH //</em> <b>Oversight memo leaked</b> — 14 pages, Q3 inquiries</span>
-      <span><em>SIGNAL //</em> Senate cloture vote <b>63‑37</b></span>
-      <span><em>FILINGS //</em> 312 new disclosures, <b>+18% w/w</b></span>
-      <span><em>WAYSANDMEANS //</em> <b>Markup scheduled</b> on HR 4183 — 09:00 ET</span>
-      <span><em>POH //</em> <b>Oversight memo leaked</b> — 14 pages, Q3 inquiries</span>
-      <span><em>SIGNAL //</em> Senate cloture vote <b>63‑37</b></span>
-      <span><em>FILINGS //</em> 312 new disclosures, <b>+18% w/w</b></span>
+  <div class="querybar">
+    <span class="q">QUESTIONS WE ANSWER /</span>
+    <div class="query-track">
+      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
+      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
     </div>
   </div>
 
@@ -125,98 +150,160 @@
     <div class="hero-inner">
       <div>
         <div class="kicker">
-          <span class="pill">OPS‑01 // INTELLIGENCE</span>
-          <span class="mono">13 APR 2026 · 06:55</span>
+          <span class="pill">STANDING INTELLIGENCE · HEALTHCARE POLICY</span>
+          <span class="mono">VERSION 2026.Q2</span>
         </div>
-        <h1 class="display">The ground is <em>moving</em>. We're the room that hears it first.</h1>
-        <p class="lede">RojasReport is the console. Twenty‑three desks. One feed. Filings, votes, memos, leaks — surfaced, cross‑referenced, and briefed before the news cycle catches up.</p>
+        <h1 class="display">Standing intelligence on <em>who pays whom</em> in American healthcare.</h1>
+        <p class="lede">Not a newsfeed. A reference console. Twenty‑three registries, cross‑referenced and annotated — for the lobbyist, the physician, the lawmaker, and the voter asking the same question from four different angles: <em>follow the money</em>.</p>
         <div class="cta">
-          <a class="btn primary">Open the console →</a>
-          <a class="btn">Browse desks</a>
+          <a class="btn primary">Look up an entity →</a>
+          <a class="btn">How we know</a>
         </div>
       </div>
 
-      <div class="hud">
-        <div class="hud-head">
-          <span class="mono">SECTOR // NOW</span>
-          <span class="live">LIVE</span>
+      <div class="entity">
+        <div class="entity-head">
+          <span class="label">ENTITY CARD · SAMPLE</span>
+          <span class="updated">INDEXED · APR 13</span>
         </div>
-        <div class="hud-row"><div><b>Ways &amp; Means markup</b><div class="src">waysandmeans.rojasreport</div></div><span class="mono accent">09:00</span></div>
-        <div class="hud-row"><div><b>POH oversight drop</b><div class="src">poh.rojasreport</div></div><span class="mono accent">+14p</span></div>
-        <div class="hud-row"><div><b>Senate cloture</b><div class="src">signal desk</div></div><span class="mono">63‑37</span></div>
-        <div class="hud-row"><div><b>New filings (24h)</b><div class="src">filings desk</div></div><span class="mono">312 · +18%</span></div>
+        <div class="entity-title">
+          <h4>AHIP</h4>
+          <div class="sub">TRADE ASSOCIATION · HEALTH INSURANCE · WASHINGTON DC</div>
+        </div>
+        <div class="entity-body">
+          <div class="row"><span class="k">Lobbying (2026 YTD)</span><span class="v accent">$8.4M</span></div>
+          <div class="row"><span class="k">Disclosed clients</span><span class="v">47 payers</span></div>
+          <div class="row"><span class="k">Revolving‑door hires (24 mo)</span><span class="v">12 from CMS · 3 from HHS</span></div>
+          <div class="row"><span class="k">Board chair</span><span class="v">Mike Tuffin</span></div>
+          <div class="row"><span class="k">Related filings</span><span class="v accent">312 indexed</span></div>
+          <div class="row"><span class="k">Crossrefs</span><span class="v">PhRMA · AHA · BCBSA</span></div>
+        </div>
+        <div class="entity-foot">
+          <span>SOURCES · 9 · AUDITED</span>
+          <span>OPEN CARD →</span>
+        </div>
       </div>
     </div>
   </section>
 
+  <!-- Four personas -->
   <section class="section">
     <div class="section-head">
-      <h2>The desks <span class="mono" style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-left:10px">23 CHANNELS · 3 ACTIVE</span></h2>
-      <a class="mono">View all →</a>
+      <span class="mono">THE FOUR QUESTIONS</span>
+      <h2>Who's the reader? <em>You are.</em> Four angles on the same paper trail.</h2>
+      <p>Every desk, every dossier, every registry is built to serve these four questions. The intelligence doesn't change — who's asking, does.</p>
+    </div>
+    <div class="personas">
+
+      <div class="persona">
+        <div class="id">READER / 01 · THE LOBBYIST</div>
+        <h3>You need to know <em>who pays whom</em>.</h3>
+        <p class="q">Who does AHIP, AHA, and Abbott Labs pay — and who writes the checks back?</p>
+        <p class="answer">Entity cards on every major trade association, hospital system, insurer, and manufacturer. Donor graphs. Client rosters. Revolving‑door chronologies. Twenty years of cross‑referenced disclosures, deduplicated and time‑stamped.</p>
+        <div class="cta">Open the lobbyist view</div>
+      </div>
+
+      <div class="persona">
+        <div class="id">READER / 02 · THE PHYSICIAN</div>
+        <h3>You're weighing a <em>build decision</em>.</h3>
+        <p class="q">Can I build a micro‑hospital next to this POH — and who's going to try to block it?</p>
+        <p class="answer">Physician‑Owned Hospital directory with proximity maps, CMS penalty histories, affiliated referral networks, and the health‑system competitors that have CON‑fought similar builds. The answer's in the paper — we built the map.</p>
+        <div class="cta">Open the physician view</div>
+      </div>
+
+      <div class="persona">
+        <div class="id">READER / 03 · THE LAWMAKER</div>
+        <h3>You're looking for an <em>ally</em>.</h3>
+        <p class="q">Who could be a co‑sponsor on 340B reform — and who already owes a favor?</p>
+        <p class="answer">Bill‑by‑bill co‑sponsorship networks, committee seniority, constituent hospital footprints, and donor overlap analysis. The map of who can move with you, and who needs to be traded with first.</p>
+        <div class="cta">Open the lawmaker view</div>
+      </div>
+
+      <div class="persona">
+        <div class="id">READER / 04 · THE VOTER</div>
+        <h3>You just want to <em>understand</em>.</h3>
+        <p class="q">What is Abbott Labs spending in my district — and is my hospital sending me bills I don't owe?</p>
+        <p class="answer">District‑level dashboards. Hospital price transparency. The plain‑English explainer on surprise billing, 340B, the No Surprises Act. Written without jargon, linked to the filings it came from.</p>
+        <div class="cta">Open the voter view</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Desks -->
+  <section class="section">
+    <div class="section-head">
+      <span class="mono">THE DESKS · 23 REGISTRIES</span>
+      <h2>One console. Twenty‑three <em>standing registries</em>.</h2>
+      <p>Each desk is a subdomain, a registry, and an editorial voice. Intelligence below; analysis above. Follow the ones you need — or sweep them all from the hub.</p>
     </div>
     <div class="desks">
       <a class="desk">
         <div>
           <div class="id">DESK / 01</div>
           <div class="name">Ways &amp; Means</div>
-          <div class="tag">Tax writing, trade, entitlements — the pipes of fiscal policy.</div>
+          <div class="tag">Tax writing and entitlement financing — where healthcare policy is paid for.</div>
         </div>
-        <div class="meta"><span class="on">● LIVE</span><span>waysandmeans.rojasreport</span></div>
+        <div class="meta"><span class="on">● INDEXED</span><span>waysandmeans</span></div>
       </a>
       <a class="desk">
         <div>
           <div class="id">DESK / 02</div>
           <div class="name">POH</div>
-          <div class="tag">Oversight, inquiries, leaked memos — accountability desk.</div>
+          <div class="tag">Physician‑Owned Hospitals — directory, permits, penalties, price transparency.</div>
         </div>
-        <div class="meta"><span class="on">● LIVE</span><span>poh.rojasreport</span></div>
+        <div class="meta"><span class="on">● INDEXED</span><span>poh</span></div>
       </a>
       <a class="desk">
         <div>
           <div class="id">DESK / 03</div>
-          <div class="name">Signal</div>
-          <div class="tag">Votes, cloture, markups — floor‑action tracker.</div>
+          <div class="name">AHIP &amp; Payers</div>
+          <div class="tag">Insurer trade groups, MCOs, MA plans. Who pays whom.</div>
         </div>
-        <div class="meta"><span>○ SOON</span><span>signal.rojasreport</span></div>
+        <div class="meta"><span>○ Q3 2026</span><span>payers</span></div>
       </a>
       <a class="desk">
         <div>
           <div class="id">DESK / 04</div>
-          <div class="name">Filings</div>
-          <div class="tag">SEC, FEC, lobbying — paperwork of power.</div>
+          <div class="name">Pharma &amp; 340B</div>
+          <div class="tag">Manufacturers, PBMs, the drug‑discount program's hidden economics.</div>
         </div>
-        <div class="meta"><span>○ SOON</span><span>filings.rojasreport</span></div>
+        <div class="meta"><span>○ Q3 2026</span><span>pharma</span></div>
       </a>
     </div>
   </section>
 
+  <!-- Dossiers -->
   <section class="section">
-    <div class="section-head"><h2>Today's dossiers</h2><a class="mono">All dossiers →</a></div>
+    <div class="section-head">
+      <span class="mono">RECENT DOSSIERS</span>
+      <h2>Long‑form analysis, <em>sourced line by line</em>.</h2>
+    </div>
     <div class="dossiers">
       <article class="dossier lead">
-        <div class="mono accent">LEAD DOSSIER · 18 MIN READ</div>
-        <h3>Inside the markup: how HR 4183 quietly rewrote the R&amp;D credit.</h3>
-        <p>A fiscal footnote the lobbyists wrote themselves — reconstructed from committee drafts, whip counts, and three dozen filings.</p>
-        <div class="byline">ROJAS DESK · APR 13</div>
+        <div class="mono accent">LEAD DOSSIER · 18 MIN</div>
+        <h3>How the AHIP–Abbott–AHA triangle wrote the 2026 R&amp;D credit.</h3>
+        <p>The footnote that moved $48B — reconstructed from nine months of disclosures, three industry letters, and one staffer's deleted calendar invite.</p>
+        <div class="byline">ROJAS DESK · APR 13 · FILED 06:55</div>
       </article>
       <article class="dossier">
-        <div class="mono accent">POH · 6 MIN</div>
-        <h3>The 14‑page memo, annotated.</h3>
-        <p>What the oversight letter actually asks — and the three asks buried in the footnotes.</p>
-        <div class="byline">POH · APR 13</div>
+        <div class="mono accent">POH · 7 MIN</div>
+        <h3>The POH permit maze, mapped.</h3>
+        <p>Which states let physicians build. Which don't. Who's fighting it in court — and who's quietly paying for the fight.</p>
+        <div class="byline">POH · APR 12</div>
       </article>
       <article class="dossier">
-        <div class="mono accent">SIGNAL · 4 MIN</div>
-        <h3>Cloture at 63: the five crossover votes.</h3>
-        <p>Who moved, why, and what it costs them back home.</p>
-        <div class="byline">SIGNAL · APR 12</div>
+        <div class="mono accent">WAYS &amp; MEANS · 5 MIN</div>
+        <h3>Who sits on the committee — and what they <em>own</em>.</h3>
+        <p>A clean, annotated directory of committee members' healthcare holdings, recusals, and spouse interests.</p>
+        <div class="byline">WAYSANDMEANS · APR 11</div>
       </article>
     </div>
   </section>
 
   <footer>
-    <span>ROJASREPORT // INTELLIGENCE CONSOLE</span>
-    <span>© 2026 · OPS‑01</span>
+    <span>ROJASREPORT // STANDING INTELLIGENCE</span>
+    <span>© 2026 · VERSION 2026.Q2</span>
   </footer>
 
 </body>
