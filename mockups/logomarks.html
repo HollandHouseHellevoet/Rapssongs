@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RojasReport — Logomark Explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B; --paper:#0E0E10; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
+    --accent:#FF6A1F; --live:#4ADE80;
+    --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --serif:'Fraunces',ui-serif,Georgia,serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);padding:48px 28px;min-height:100vh}
+  .label{position:fixed;top:14px;right:14px;font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid var(--accent);padding:4px 10px;border-radius:999px;letter-spacing:.1em;z-index:100}
+  h1{font-family:var(--serif);font-weight:600;font-size:48px;letter-spacing:-.02em;margin:0 0 8px;max-width:1200px;margin-left:auto;margin-right:auto}
+  .deck{font-family:var(--sans);font-size:16px;color:var(--dim);margin:0 0 48px;max-width:1200px;margin-left:auto;margin-right:auto;line-height:1.5}
+  .grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:32px;background:rgba(255,255,255,.02);display:flex;flex-direction:column;gap:18px;min-height:380px}
+  .card:hover{border-color:rgba(255,106,31,.4)}
+  .stage{flex:1;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.3);border-radius:8px;padding:24px;min-height:200px}
+  .meta{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+  .name{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.01em;margin:0}
+  .id{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.12em}
+  .desc{font-family:var(--sans);font-size:13px;color:var(--dim);line-height:1.5;margin:0}
+  .lockup{display:flex;align-items:center;gap:12px;font-family:var(--sans);font-weight:700;letter-spacing:.04em;font-size:18px;border-top:1px solid var(--line);padding-top:18px}
+
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+  /* shared svg */
+  .accent-stroke{stroke:#FF6A1F}
+  .fg-stroke{stroke:#F5F5F4}
+  .dim-stroke{stroke:#8A8A88}
+</style>
+</head>
+<body>
+  <div class="label">CONCEPT · LOGOMARK · 6 DIRECTIONS</div>
+  <h1>Six logomark directions for <span style="font-style:italic;color:var(--accent)">RR</span>.</h1>
+  <p class="deck">Each is built to render at 16×16 (favicon), 96×96 (avatar), and 480×480 (hero). Vector‑first, single‑accent, animatable. The last column shows the wordmark lockup so you can read each at navigation scale.</p>
+
+  <div class="grid">
+
+    <!-- 01 — Hex Badge -->
+    <div class="card">
+      <div class="stage">
+        <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
+          <polygon points="50,6 88,28 88,72 50,94 12,72 12,28" stroke="#FF6A1F" stroke-width="2"/>
+          <polygon points="50,16 80,33 80,67 50,84 20,67 20,33" stroke="#FF6A1F" stroke-width="1" stroke-opacity=".4"/>
+          <text x="50" y="58" text-anchor="middle" fill="#FF6A1F" font-family="'Geist Mono',monospace" font-size="22" font-weight="600" letter-spacing="2">RR</text>
+          <line x1="32" y1="78" x2="68" y2="78" stroke="#FF6A1F" stroke-width=".8" stroke-opacity=".5"/>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Hex Badge</h3><span class="id">MARK / 01</span></div>
+      <p class="desc">Comms‑badge / military insignia. Reads as a unit, station, identifier. Most direct match to the LAYER‑X HUD reference.</p>
+      <div class="lockup">
+        <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+          <polygon points="50,6 88,28 88,72 50,94 12,72 12,28" stroke="#FF6A1F" stroke-width="6"/>
+          <text x="50" y="62" text-anchor="middle" fill="#FF6A1F" font-family="'Geist Mono',monospace" font-size="34" font-weight="600">RR</text>
+        </svg>
+        ROJASREPORT
+      </div>
+    </div>
+
+    <!-- 02 — Circular Seal -->
+    <div class="card">
+      <div class="stage">
+        <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="44" stroke="#FF6A1F" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="36" stroke="#FF6A1F" stroke-width=".8" stroke-opacity=".4" stroke-dasharray="2 2"/>
+          <text x="50" y="56" text-anchor="middle" fill="#FF6A1F" font-family="'Fraunces',serif" font-size="22" font-weight="700" font-style="italic">RR</text>
+          <path d="M 50 8 L 52 14 L 50 12 L 48 14 Z" fill="#FF6A1F"/>
+          <text x="50" y="92" text-anchor="middle" fill="#FF6A1F" font-family="'Geist Mono',monospace" font-size="6" letter-spacing="2">· ROJASREPORT ·</text>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Circular Seal</h3><span class="id">MARK / 02</span></div>
+      <p class="desc">Agency / institution. Italic serif inside a dashed inner ring. Civic gravitas without the cliché eagle.</p>
+      <div class="lockup">
+        <svg width="22" height="22" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" stroke="#FF6A1F" stroke-width="6" fill="none"/><text x="50" y="62" text-anchor="middle" fill="#FF6A1F" font-family="'Fraunces',serif" font-size="46" font-weight="700" font-style="italic">R</text></svg>
+        ROJASREPORT
+      </div>
+    </div>
+
+    <!-- 03 — Monogram Slash -->
+    <div class="card">
+      <div class="stage">
+        <svg width="200" height="160" viewBox="0 0 130 100" fill="none">
+          <text x="20" y="78" fill="#F5F5F4" font-family="'Fraunces',serif" font-size="80" font-weight="700">R</text>
+          <line x1="65" y1="14" x2="42" y2="92" stroke="#FF6A1F" stroke-width="3"/>
+          <text x="76" y="78" fill="#FF6A1F" font-family="'Fraunces',serif" font-size="80" font-weight="700" font-style="italic">R</text>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Monogram /</h3><span class="id">MARK / 03</span></div>
+      <p class="desc">R/R — the slash *is* the brand. Editorial first, signal accent. Works wonderfully as a print mast.</p>
+      <div class="lockup">
+        <svg width="34" height="22" viewBox="0 0 130 100"><text x="20" y="80" fill="#F5F5F4" font-family="'Fraunces',serif" font-size="92" font-weight="700">R</text><line x1="65" y1="14" x2="42" y2="92" stroke="#FF6A1F" stroke-width="8"/><text x="76" y="80" fill="#FF6A1F" font-family="'Fraunces',serif" font-size="92" font-weight="700" font-style="italic">R</text></svg>
+        ROJASREPORT
+      </div>
+    </div>
+
+    <!-- 04 — Waveform -->
+    <div class="card">
+      <div class="stage">
+        <svg width="200" height="120" viewBox="0 0 200 100" fill="none">
+          <g stroke="#FF6A1F" stroke-width="2" stroke-linecap="round">
+            <line x1="20" y1="50" x2="20" y2="50"/>
+            <line x1="32" y1="40" x2="32" y2="60"/>
+            <line x1="44" y1="28" x2="44" y2="72"/>
+            <line x1="56" y1="20" x2="56" y2="80"/>
+            <line x1="68" y1="36" x2="68" y2="64"/>
+            <line x1="80" y1="42" x2="80" y2="58"/>
+            <line x1="92" y1="22" x2="92" y2="78"/>
+            <line x1="104" y1="14" x2="104" y2="86"/>
+            <line x1="116" y1="30" x2="116" y2="70"/>
+            <line x1="128" y1="44" x2="128" y2="56"/>
+            <line x1="140" y1="36" x2="140" y2="64"/>
+            <line x1="152" y1="46" x2="152" y2="54"/>
+            <line x1="164" y1="50" x2="164" y2="50"/>
+            <line x1="176" y1="48" x2="176" y2="52"/>
+          </g>
+          <text x="100" y="98" text-anchor="middle" fill="#8A8A88" font-family="'Geist Mono',monospace" font-size="6" letter-spacing="3">CHANNEL · LIVE · 0:23</text>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Waveform</h3><span class="id">MARK / 04</span></div>
+      <p class="desc">Audio‑signal motif. Animates. Says "we hear what's happening." Great as the favicon — even at 16px, it reads as motion.</p>
+      <div class="lockup">
+        <svg width="34" height="22" viewBox="0 0 200 100"><g stroke="#FF6A1F" stroke-width="8" stroke-linecap="round"><line x1="40" y1="40" x2="40" y2="60"/><line x1="80" y1="20" x2="80" y2="80"/><line x1="120" y1="30" x2="120" y2="70"/><line x1="160" y1="44" x2="160" y2="56"/></g></svg>
+        ROJASREPORT
+      </div>
+    </div>
+
+    <!-- 05 — Target Reticle -->
+    <div class="card">
+      <div class="stage">
+        <svg width="160" height="160" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="42" stroke="#FF6A1F" stroke-width="1" stroke-opacity=".4"/>
+          <circle cx="50" cy="50" r="28" stroke="#FF6A1F" stroke-width="1.2"/>
+          <circle cx="50" cy="50" r="14" stroke="#FF6A1F" stroke-width="1.5"/>
+          <circle cx="50" cy="50" r="3" fill="#FF6A1F"/>
+          <line x1="50" y1="2" x2="50" y2="18" stroke="#FF6A1F" stroke-width="1.2"/>
+          <line x1="50" y1="82" x2="50" y2="98" stroke="#FF6A1F" stroke-width="1.2"/>
+          <line x1="2" y1="50" x2="18" y2="50" stroke="#FF6A1F" stroke-width="1.2"/>
+          <line x1="82" y1="50" x2="98" y2="50" stroke="#FF6A1F" stroke-width="1.2"/>
+          <text x="76" y="28" fill="#FF6A1F" font-family="'Geist Mono',monospace" font-size="6" letter-spacing="1">RR</text>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Target Reticle</h3><span class="id">MARK / 05</span></div>
+      <p class="desc">Surveillance / sniper‑scope HUD. Strongest "intelligence" semantic of the six. Edgier; not for everyone.</p>
+      <div class="lockup">
+        <svg width="22" height="22" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" stroke="#FF6A1F" stroke-width="6" fill="none"/><circle cx="50" cy="50" r="14" fill="#FF6A1F"/></svg>
+        ROJASREPORT
+      </div>
+    </div>
+
+    <!-- 06 — Dispatch Dot -->
+    <div class="card">
+      <div class="stage">
+        <svg width="240" height="100" viewBox="0 0 240 100" fill="none">
+          <text x="10" y="64" fill="#F5F5F4" font-family="'Fraunces',serif" font-size="42" font-weight="700" letter-spacing="-1">RojasReport</text>
+          <circle cx="226" cy="54" r="5" fill="#FF6A1F"/>
+          <circle cx="226" cy="54" r="9" stroke="#FF6A1F" stroke-width="1" stroke-opacity=".4"/>
+        </svg>
+      </div>
+      <div class="meta"><h3 class="name">Dispatch Dot</h3><span class="id">MARK / 06</span></div>
+      <p class="desc">Wordmark + a single living dot. The whole identity is one breathing signal. Most editorial of the six; least HUD.</p>
+      <div class="lockup">
+        <svg width="100" height="22" viewBox="0 0 240 100"><text x="0" y="68" fill="#F5F5F4" font-family="'Fraunces',serif" font-size="64" font-weight="700">RojasReport</text><circle cx="234" cy="58" r="8" fill="#FF6A1F"/></svg>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RojasReport — Dossier Reading View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B; --paper:#0E0E10; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
+    --accent:#FF6A1F; --live:#4ADE80;
+    --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --serif:'Fraunces',ui-serif,Georgia,serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .label{position:fixed;top:14px;right:14px;font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid var(--accent);padding:4px 10px;border-radius:999px;letter-spacing:.1em;z-index:100}
+  .mono{font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-size:11px;color:var(--dim)}
+  .accent{color:var(--accent)}
+
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,11,.85);backdrop-filter:blur(8px);z-index:10}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+  .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
+  .brand .mark span{transform:rotate(-45deg)}
+  .nav{display:flex;gap:18px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+  .crumb{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em}
+  .crumb a{color:var(--accent)}
+
+  /* Reading rail */
+  .article{display:grid;grid-template-columns:240px 1fr 240px;gap:48px;max-width:1280px;margin:0 auto;padding:48px 28px 96px}
+  .rail{position:sticky;top:80px;align-self:start;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
+  .rail h4{color:var(--fg);margin:0 0 12px;font-size:11px;font-weight:500;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .rail ul{list-style:none;padding:0;margin:0 0 28px;display:flex;flex-direction:column;gap:8px}
+  .rail ul li{cursor:pointer;line-height:1.4} .rail ul li:hover{color:var(--accent)}
+  .rail ul li.active{color:var(--accent)}
+  .rail ul li.active::before{content:"";display:inline-block;width:8px;height:1px;background:var(--accent);margin-right:8px;vertical-align:middle}
+
+  .body{max-width:680px}
+  .pill{border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;display:inline-block;margin-bottom:18px}
+  h1{font-family:var(--serif);font-weight:700;font-size:64px;line-height:1;letter-spacing:-.025em;margin:0 0 24px}
+  h1 em{font-style:italic;color:var(--accent);font-weight:600}
+  .deck{font-family:var(--serif);font-size:22px;line-height:1.4;color:var(--dim);font-weight:400;font-style:italic;margin:0 0 32px;max-width:600px}
+  .meta{display:flex;gap:18px;align-items:center;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;margin-bottom:48px}
+  .meta b{color:var(--fg);font-weight:500}
+
+  .body p{font-family:var(--serif);font-size:19px;line-height:1.65;margin:0 0 24px;color:#E8E8E6}
+  .body p.lead::first-letter{font-family:var(--serif);font-weight:700;font-size:84px;line-height:.85;float:left;padding:6px 12px 0 0;color:var(--accent)}
+  .body h2{font-family:var(--serif);font-weight:600;font-size:32px;line-height:1.1;letter-spacing:-.015em;margin:56px 0 20px}
+  .body blockquote{border-left:2px solid var(--accent);margin:32px 0;padding:8px 0 8px 24px;font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.4;color:var(--fg)}
+  .body blockquote cite{display:block;font-style:normal;font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:10px;letter-spacing:.08em}
+  .pull{margin:48px 0;padding:32px;border:1px solid var(--line);border-radius:10px;background:rgba(255,106,31,.04);font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.06em}
+  .pull h3{margin:0 0 16px;font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.12em}
+  .pull .row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:8px 0;border-top:1px dashed var(--line)}
+  .pull .row:first-of-type{border-top:none}
+  .pull .row b{color:var(--fg);font-weight:500;font-family:var(--sans);font-size:13px}
+  .pull .v{color:var(--accent);font-size:11px}
+
+  /* Civic OS embedded widget */
+  .widget{margin:48px 0;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .widget-head{display:flex;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
+  .widget-head .live{color:var(--live);display:flex;align-items:center;gap:6px}
+  .widget-head .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--live);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .vote{display:grid;grid-template-columns:120px 1fr 60px;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);align-items:center;font-size:13px}
+  .vote:last-child{border-bottom:none}
+  .vote .name{font-family:var(--serif);font-weight:600}
+  .vote .bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;display:flex}
+  .vote .bar .y{background:var(--live);height:100%}
+  .vote .bar .n{background:var(--accent);height:100%}
+  .vote .v{font-family:var(--mono);font-size:11px;text-align:right;color:var(--dim)}
+  .vote .v b{color:var(--fg)}
+
+  .right-rail{position:sticky;top:80px;align-self:start}
+  .right-rail h4{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;margin:0 0 14px}
+  .crossref{padding:14px 0;border-top:1px solid var(--line);cursor:pointer}
+  .crossref:hover .name{color:var(--accent)} .crossref:first-child{border-top:none}
+  .crossref .desk{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.12em;margin-bottom:6px}
+  .crossref .name{font-family:var(--serif);font-size:16px;line-height:1.2;font-weight:600}
+  .crossref .when{font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:6px;letter-spacing:.08em}
+
+  @media (max-width:1024px){
+    .article{grid-template-columns:1fr;gap:32px}
+    .rail,.right-rail{position:static;display:none}
+  }
+  @media (max-width:600px){
+    h1{font-size:42px} .body p{font-size:17px}
+  }
+</style>
+</head>
+<body>
+  <div class="label">CONCEPT · DOSSIER · /dossiers/[slug]</div>
+  <header class="top">
+    <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
+    <div class="crumb"><a>CONSOLE</a> / <a>DOSSIERS</a> / <span class="accent">HR4183‑MARKUP</span></div>
+    <nav class="nav"><a>SHARE</a><a>SAVE</a></nav>
+  </header>
+
+  <article class="article">
+    <aside class="rail">
+      <h4>IN THIS DOSSIER</h4>
+      <ul>
+        <li class="active">The 4‑a.m. footnote</li>
+        <li>Who wrote the language</li>
+        <li>Vote whip count</li>
+        <li>Cost-shifting modeled</li>
+        <li>What dies in conference</li>
+        <li>Sources & methodology</li>
+      </ul>
+      <h4>READ TIME</h4>
+      <p style="color:var(--fg);font-family:var(--sans);font-size:14px;margin:0">18 minutes</p>
+    </aside>
+
+    <div class="body">
+      <span class="pill">LEAD DOSSIER · WAYS &amp; MEANS</span>
+      <h1>Inside the markup: how HR&nbsp;4183 quietly rewrote the <em>R&amp;D credit</em>.</h1>
+      <p class="deck">A fiscal footnote the lobbyists wrote themselves — reconstructed from committee drafts, whip counts, and three dozen filings.</p>
+
+      <div class="meta">
+        <span><b>BY</b> ROJAS DESK</span>
+        <span><b>WITH</b> WAYS &amp; MEANS · POH</span>
+        <span><b>FILED</b> 13 APR 2026 · 06:55 ET</span>
+        <span><b>UPDATED</b> 13 APR · 11:04 ET</span>
+      </div>
+
+      <p class="lead">The committee print arrived at 4:07 a.m. — twenty‑six minutes after the staff director sent the second whip count, ninety‑four minutes before the markup was scheduled to gavel. By the time members read it, the language had been on a lobbyist's hard drive for nine months.</p>
+
+      <p>None of that is new. What's new is footnote 14, on page 311 of a 412‑page bill, which redefines "qualified research" so quietly that the Joint Committee on Taxation needed three days to score it. By then, the markup had cleared subcommittee on a 24‑18 vote.</p>
+
+      <p>This dossier reconstructs how the footnote got there: who wrote it, who walked it through, who paid attention, and who was told not to.</p>
+
+      <div class="pull">
+        <h3>BY THE NUMBERS</h3>
+        <div class="row"><b>Footnote length</b><span class="v">112 words</span></div>
+        <div class="row"><b>JCT score, 10‑yr</b><span class="v">$48.3B</span></div>
+        <div class="row"><b>Lobbying disclosures referencing language</b><span class="v">37 filings</span></div>
+        <div class="row"><b>Committee members briefed before markup</b><span class="v">6 of 42</span></div>
+        <div class="row"><b>Days from print to score</b><span class="v">3</span></div>
+      </div>
+
+      <h2>Who wrote the language</h2>
+      <p>The earliest verbatim string of footnote 14 appears in a March 2025 white paper from a coalition of seven biotech firms, filed as part of a comment letter to Treasury. The string — twenty‑six words, lightly rearranged — moves through three industry letters and a Senate Finance staff memo before it surfaces in the committee print.</p>
+
+      <blockquote>
+        "We have a saying in this room: <em>nothing is in the bill until it's in the bill</em>. Then it was in the bill."
+        <cite>— senior committee staffer, granted anonymity to discuss the markup</cite>
+      </blockquote>
+
+      <div class="widget">
+        <div class="widget-head">
+          <span>EMBEDDED // WHIP COUNT · HR 4183</span>
+          <span class="live">LIVE</span>
+        </div>
+        <div class="vote"><span class="name">D · Yes</span><div class="bar"><div class="y" style="width:78%"></div><div class="n" style="width:22%"></div></div><span class="v"><b>173</b>/220</span></div>
+        <div class="vote"><span class="name">R · Yes</span><div class="bar"><div class="y" style="width:91%"></div><div class="n" style="width:9%"></div></div><span class="v"><b>197</b>/216</span></div>
+        <div class="vote"><span class="name">Combined</span><div class="bar"><div class="y" style="width:85%"></div><div class="n" style="width:15%"></div></div><span class="v"><b>370</b>/436</span></div>
+      </div>
+
+      <p>What this widget does not show — what no widget can — is that of the 47 Republicans who told their leadership they would vote no on the underlying bill, only six knew about footnote 14 before it cleared committee.</p>
+
+      <h2>Cost‑shifting modeled</h2>
+      <p>Independent modeling by three CBO‑adjacent shops puts the ten‑year score between $43B and $52B, clustered around the JCT estimate. The interesting variance isn't in the headline number; it's in <em>who pays</em>.</p>
+    </div>
+
+    <aside class="right-rail">
+      <h4>CROSSREFS · OTHER DESKS</h4>
+      <div class="crossref"><div class="desk">POH · DESK / 02</div><div class="name">The 14‑page memo, annotated.</div><div class="when">FILED APR 13 · 09:12</div></div>
+      <div class="crossref"><div class="desk">SIGNAL · DESK / 03</div><div class="name">Cloture at 63: the five crossover votes.</div><div class="when">FILED APR 12 · 22:40</div></div>
+      <div class="crossref"><div class="desk">FILINGS · DESK / 04</div><div class="name">Q1 lobbying disclosures: where R&amp;D dollars went.</div><div class="when">FILED APR 11 · 17:30</div></div>
+      <div class="crossref"><div class="desk">MONEY · DESK / 21</div><div class="name">Donor map: the seven biotech CEOs.</div><div class="when">FILED APR 10 · 14:18</div></div>
+    </aside>
+  </article>
+</body>
+</html>

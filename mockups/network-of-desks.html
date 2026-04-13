@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RojasReport — Network of Desks (d3-force hero)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<style>
+  :root{
+    --bg:#0A0A0B; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
+    --accent:#FF6A1F; --live:#4ADE80;
+    --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --serif:'Fraunces',ui-serif,Georgia,serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);overflow:hidden;height:100vh}
+  .label{position:fixed;top:14px;right:14px;font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid var(--accent);padding:4px 10px;border-radius:999px;letter-spacing:.1em;z-index:100}
+  .top{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--line);z-index:10;background:rgba(10,10,11,.6);backdrop-filter:blur(8px)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
+  .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
+  .brand .mark span{transform:rotate(-45deg)}
+  .nav{display:flex;gap:18px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+
+  .stage{position:absolute;inset:0}
+  svg{width:100%;height:100%;display:block;cursor:grab}
+  svg:active{cursor:grabbing}
+
+  .overlay{position:absolute;left:28px;bottom:28px;max-width:420px;z-index:5;pointer-events:none}
+  .overlay h1{font-family:var(--serif);font-weight:600;font-size:48px;line-height:.96;letter-spacing:-.02em;margin:0 0 12px}
+  .overlay h1 em{font-style:italic;color:var(--accent)}
+  .overlay p{color:var(--dim);font-size:14px;line-height:1.5;margin:0}
+  .hint{position:absolute;right:28px;bottom:28px;font-family:var(--mono);font-size:10px;color:var(--dim);text-align:right;z-index:5;letter-spacing:.08em}
+  .tooltip{position:absolute;background:rgba(10,10,11,.95);border:1px solid var(--accent);padding:10px 14px;border-radius:6px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:20;min-width:200px;backdrop-filter:blur(6px)}
+  .tooltip .id{font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.12em;margin-bottom:4px}
+  .tooltip .name{font-family:var(--serif);font-size:18px;font-weight:600;margin-bottom:6px}
+  .tooltip .sub{color:var(--dim);font-size:11px;line-height:1.4}
+  .tooltip .url{font-family:var(--mono);font-size:9px;color:var(--accent);margin-top:6px}
+
+  .legend-bar{position:absolute;top:80px;left:28px;display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:10px;color:var(--dim);z-index:5;letter-spacing:.08em}
+  .legend-bar .row{display:flex;align-items:center;gap:8px}
+  .legend-bar .dot{width:8px;height:8px;border-radius:50%}
+  .live-dot{background:var(--live);box-shadow:0 0 6px var(--live);animation:pulse 1.4s infinite}
+  .soon-dot{background:var(--dim);opacity:.5}
+  .hub-dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head>
+<body>
+  <div class="label">CONCEPT · NETWORK OF DESKS</div>
+  <header class="top">
+    <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
+    <nav class="nav"><a>CONSOLE</a><a>DESKS</a><a>DOSSIERS</a><a>LIVE</a></nav>
+  </header>
+
+  <div class="legend-bar">
+    <div class="row"><span class="dot hub-dot"></span> HUB</div>
+    <div class="row"><span class="dot live-dot"></span> LIVE DESK</div>
+    <div class="row"><span class="dot soon-dot"></span> SOON</div>
+  </div>
+
+  <div class="stage"><svg id="net"></svg></div>
+
+  <div class="overlay">
+    <h1>Twenty‑three desks.<br>One <em>console</em>.</h1>
+    <p>The hub is the gravity well. Every desk orbits, every story flows back. Drag the nodes — that's the network of intelligence we're building.</p>
+  </div>
+  <div class="hint">DRAG TO PLAY · HOVER TO INSPECT</div>
+
+  <div class="tooltip" id="tip"></div>
+
+<script>
+  const desks = [
+    {id:"hub", name:"RojasReport", sub:"the console", url:"rojasreport.com", state:"hub"},
+    {id:"01", name:"Ways & Means", sub:"Tax · trade · entitlements", url:"waysandmeans.rojasreport", state:"live"},
+    {id:"02", name:"POH", sub:"Oversight · accountability", url:"poh.rojasreport", state:"live"},
+    {id:"03", name:"Signal", sub:"Floor action · votes", url:"signal.rojasreport", state:"soon"},
+    {id:"04", name:"Filings", sub:"SEC · FEC · lobbying", url:"filings.rojasreport", state:"soon"},
+    {id:"05", name:"Treasury", sub:"Sanctions · OFAC · debt", url:"treasury.rojasreport", state:"soon"},
+    {id:"06", name:"Defense", sub:"Procurement · posture", url:"defense.rojasreport", state:"soon"},
+    {id:"07", name:"Energy", sub:"Grids · permits · LNG", url:"energy.rojasreport", state:"soon"},
+    {id:"08", name:"Tech", sub:"Antitrust · platforms · AI", url:"tech.rojasreport", state:"soon"},
+    {id:"09", name:"Health", sub:"FDA · CMS · Medicaid", url:"health.rojasreport", state:"soon"},
+    {id:"10", name:"Borders", sub:"DHS · CBP · asylum", url:"borders.rojasreport", state:"soon"},
+    {id:"11", name:"Justice", sub:"DOJ · indictments · DOJ‑IG", url:"justice.rojasreport", state:"soon"},
+    {id:"12", name:"Courts", sub:"SCOTUS · circuit · briefs", url:"courts.rojasreport", state:"soon"},
+    {id:"13", name:"State", sub:"Diplomacy · cables", url:"state.rojasreport", state:"soon"},
+    {id:"14", name:"Trade", sub:"USTR · tariffs · WTO", url:"trade.rojasreport", state:"soon"},
+    {id:"15", name:"Labor", sub:"NLRB · strikes · BLS", url:"labor.rojasreport", state:"soon"},
+    {id:"16", name:"Climate", sub:"EPA · disasters · COP", url:"climate.rojasreport", state:"soon"},
+    {id:"17", name:"Markets", sub:"Fed · earnings · M&A", url:"markets.rojasreport", state:"soon"},
+    {id:"18", name:"States", sub:"50‑state legislative tracker", url:"states.rojasreport", state:"soon"},
+    {id:"19", name:"Cities", sub:"Mayors · ballots · permits", url:"cities.rojasreport", state:"soon"},
+    {id:"20", name:"Polls", sub:"Aggregator · methodology", url:"polls.rojasreport", state:"soon"},
+    {id:"21", name:"Money", sub:"Donors · PACs · super‑PACs", url:"money.rojasreport", state:"soon"},
+    {id:"22", name:"Watch", sub:"FBI · CIA · NSA · ODNI", url:"watch.rojasreport", state:"soon"},
+    {id:"23", name:"Briefs", sub:"Daily intel summaries", url:"briefs.rojasreport", state:"soon"},
+  ];
+  const links = desks.filter(d => d.id !== "hub").map(d => ({source:"hub", target:d.id}));
+
+  const svg = d3.select("#net");
+  const W = window.innerWidth, H = window.innerHeight;
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+
+  // background grid
+  const defs = svg.append("defs");
+  const grad = defs.append("radialGradient").attr("id","glow").attr("cx","50%").attr("cy","50%").attr("r","60%");
+  grad.append("stop").attr("offset","0%").attr("stop-color","#FF6A1F").attr("stop-opacity",".18");
+  grad.append("stop").attr("offset","100%").attr("stop-color","#FF6A1F").attr("stop-opacity","0");
+  svg.append("rect").attr("width",W).attr("height",H).attr("fill","url(#glow)");
+
+  // grid lines
+  const gridG = svg.append("g").attr("opacity",.18);
+  for(let x=0;x<W;x+=56) gridG.append("line").attr("x1",x).attr("x2",x).attr("y1",0).attr("y2",H).attr("stroke","#fff").attr("stroke-opacity",.06);
+  for(let y=0;y<H;y+=56) gridG.append("line").attr("x1",0).attr("x2",W).attr("y1",y).attr("y2",H).attr("y2",y).attr("stroke","#fff").attr("stroke-opacity",.06);
+
+  const sim = d3.forceSimulation(desks)
+    .force("charge", d3.forceManyBody().strength(d => d.id==="hub" ? -800 : -180))
+    .force("link", d3.forceLink(links).id(d=>d.id).distance(d => 200 + Math.random()*120).strength(.4))
+    .force("center", d3.forceCenter(W/2, H/2))
+    .force("collide", d3.forceCollide(d => d.id==="hub" ? 60 : 38));
+
+  const linkG = svg.append("g").selectAll("line").data(links).enter().append("line")
+    .attr("stroke","#FF6A1F").attr("stroke-opacity",.15).attr("stroke-width",1).attr("stroke-dasharray","2 4");
+
+  const nodeG = svg.append("g").selectAll("g").data(desks).enter().append("g")
+    .style("cursor","grab")
+    .call(d3.drag()
+      .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(.3).restart();d.fx=d.x;d.fy=d.y})
+      .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y})
+      .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null}));
+
+  // hub gets a special treatment
+  nodeG.filter(d => d.id==="hub").append("circle").attr("r",46).attr("fill","none").attr("stroke","#FF6A1F").attr("stroke-width",1).attr("stroke-opacity",.5);
+  nodeG.filter(d => d.id==="hub").append("circle").attr("r",36).attr("fill","#FF6A1F").attr("fill-opacity",.08).attr("stroke","#FF6A1F").attr("stroke-width",1.5);
+  nodeG.filter(d => d.id==="hub").append("text").text("RR").attr("text-anchor","middle").attr("dy",".35em").attr("fill","#FF6A1F").attr("font-family","'Geist Mono',monospace").attr("font-size",14).attr("font-weight",600).attr("letter-spacing",".1em");
+
+  // desk nodes
+  const desk = nodeG.filter(d => d.id!=="hub");
+  desk.append("circle").attr("r",24).attr("fill","#0A0A0B").attr("stroke",d => d.state==="live" ? "#4ADE80" : "rgba(255,255,255,.2)").attr("stroke-width",1);
+  desk.filter(d => d.state==="live").append("circle").attr("r",24).attr("fill","none").attr("stroke","#4ADE80").attr("stroke-opacity",.4).attr("stroke-width",1).attr("class","ring");
+  desk.append("text").text(d=>d.id).attr("text-anchor","middle").attr("dy","-.1em").attr("fill","#fff").attr("font-family","'Geist Mono',monospace").attr("font-size",10).attr("font-weight",500);
+  desk.append("text").text(d=>d.name.split(" ")[0].slice(0,8)).attr("text-anchor","middle").attr("dy","1em").attr("fill","#8A8A88").attr("font-family","'Geist Mono',monospace").attr("font-size",8).attr("letter-spacing",".05em");
+
+  // pulse the live rings
+  d3.selectAll(".ring").each(function(){
+    d3.select(this).append("animate").attr("attributeName","r").attr("values","24;36;24").attr("dur","2.8s").attr("repeatCount","indefinite");
+    d3.select(this).append("animate").attr("attributeName","stroke-opacity").attr("values",".5;0;.5").attr("dur","2.8s").attr("repeatCount","indefinite");
+  });
+
+  // tooltip
+  const tip = document.getElementById("tip");
+  nodeG.on("mouseenter", (e,d) => {
+    if(d.id==="hub") return;
+    tip.innerHTML = `<div class="id">DESK / ${d.id}</div><div class="name">${d.name}</div><div class="sub">${d.sub}</div><div class="url">${d.url}</div>`;
+    tip.style.opacity = 1;
+  }).on("mousemove", e => {
+    tip.style.left = (e.clientX + 14) + "px";
+    tip.style.top = (e.clientY + 14) + "px";
+  }).on("mouseleave", () => { tip.style.opacity = 0; });
+
+  sim.on("tick",()=>{
+    linkG.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    nodeG.attr("transform",d=>`translate(${d.x},${d.y})`);
+  });
+
+  window.addEventListener("resize",()=>{
+    const W=window.innerWidth,H=window.innerHeight;
+    svg.attr("viewBox",`0 0 ${W} ${H}`);
+    sim.force("center",d3.forceCenter(W/2,H/2)).alpha(.3).restart();
+  });
+</script>
+</body>
+</html>

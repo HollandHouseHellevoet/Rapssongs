@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RojasReport — Identity: Signal (Amber)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
+    --accent:#FF6A1F; --live:#FF6A1F; --alert:#FF6A1F;
+    --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --serif:'Fraunces',ui-serif,Georgia,serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans)}
+  .label{position:fixed;top:14px;right:14px;font-family:var(--mono);font-size:10px;color:var(--accent);border:1px solid var(--accent);padding:4px 10px;border-radius:999px;letter-spacing:.1em;z-index:100}
+  .mono{font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-size:11px;color:var(--dim)}
+  .accent{color:var(--accent)}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+  .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
+  .brand .mark span{transform:rotate(-45deg)}
+
+  .ticker{display:flex;align-items:center;gap:14px;padding:8px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
+  .ticker .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .ticker-track{display:flex;gap:48px;white-space:nowrap;animation:scroll 60s linear infinite}
+  .ticker-track span em{color:var(--accent);font-style:normal} .ticker-track span b{color:var(--fg);font-weight:500}
+  @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  .hero{position:relative;padding:96px 28px;border-bottom:1px solid var(--line);overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 500px at 70% 30%,rgba(255,106,31,.22),transparent 60%);pointer-events:none}
+  .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);opacity:.4}
+  .hero-inner{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+  .pill{border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;display:inline-block;margin-bottom:18px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.02em;margin:0 0 22px}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{font-size:18px;color:var(--dim);max-width:520px;line-height:1.5}
+
+  .hud{border:1px solid var(--line);border-radius:10px;padding:20px;background:rgba(255,255,255,.02)}
+  .hud-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .hud-head .live{color:var(--accent);font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:6px}
+  .hud-head .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .hud-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
+  .hud-row:first-of-type{border-top:none}
+  .hud-row .src{font-family:var(--mono);font-size:10px;color:var(--dim)} .hud-row b{font-weight:500}
+
+  .swatch{position:fixed;bottom:14px;right:14px;display:flex;gap:6px;background:rgba(0,0,0,.6);padding:8px;border-radius:8px;border:1px solid var(--line)}
+  .swatch span{width:24px;height:24px;border-radius:4px;display:block}
+  .nav{display:flex;gap:18px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+</style>
+</head>
+<body>
+  <div class="label">IDENTITY · SIGNAL · AMBER</div>
+  <header class="top">
+    <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
+    <nav class="nav"><a>CONSOLE</a><a>DESKS</a><a>DOSSIERS</a><a>LIVE</a></nav>
+  </header>
+  <div class="ticker">
+    <span class="dot"></span><span class="mono">LIVE // INTEL</span>
+    <div class="ticker-track">
+      <span><em>WAYSANDMEANS //</em> <b>HR 4183 markup</b> at 09:00</span>
+      <span><em>POH //</em> <b>14p oversight memo</b> leaked</span>
+      <span><em>SIGNAL //</em> Cloture <b>63‑37</b></span>
+      <span><em>FILINGS //</em> 312 disclosures, <b>+18% w/w</b></span>
+      <span><em>WAYSANDMEANS //</em> <b>HR 4183 markup</b> at 09:00</span>
+      <span><em>POH //</em> <b>14p oversight memo</b> leaked</span>
+      <span><em>SIGNAL //</em> Cloture <b>63‑37</b></span>
+      <span><em>FILINGS //</em> 312 disclosures, <b>+18% w/w</b></span>
+    </div>
+  </div>
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div>
+        <span class="pill">OPS‑01 // INTELLIGENCE</span>
+        <h1>The room that hears it <em>first</em>.</h1>
+        <p class="lede">Single accent. Single signal. Amber on black, used the way HUD systems use it — as <span class="accent">alert</span>, not as ornament.</p>
+      </div>
+      <div class="hud">
+        <div class="hud-head"><span class="mono">SECTOR // NOW</span><span class="live">LIVE</span></div>
+        <div class="hud-row"><div><b>Ways &amp; Means markup</b><div class="src">waysandmeans.rojasreport</div></div><span class="mono accent">09:00</span></div>
+        <div class="hud-row"><div><b>POH oversight drop</b><div class="src">poh.rojasreport</div></div><span class="mono accent">+14p</span></div>
+        <div class="hud-row"><div><b>Senate cloture</b><div class="src">signal desk</div></div><span class="mono">63‑37</span></div>
+        <div class="hud-row"><div><b>New filings (24h)</b><div class="src">filings desk</div></div><span class="mono">312</span></div>
+      </div>
+    </div>
+  </section>
+  <div class="swatch">
+    <span style="background:#0A0A0B;border:1px solid #333" title="bg #0A0A0B"></span>
+    <span style="background:#F5F5F4" title="fg #F5F5F4"></span>
+    <span style="background:#FF6A1F" title="accent #FF6A1F"></span>
+  </div>
+</body>
+</html>
