@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RojasReport — Four readers, four views</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
+    --accent:#FF6A1F;
+    --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+    --mono:'Geist Mono',ui-monospace,Menlo,monospace;
+    --serif:'Fraunces',ui-serif,Georgia,serif;
+  }
+  *{box-sizing:border-box} html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-size:11px;color:var(--dim)}
+  .accent{color:var(--accent)}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,11,.85);backdrop-filter:blur(8px);z-index:10}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700}
+  .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
+  .brand .mark span{transform:rotate(-45deg)}
+  .nav{display:flex;gap:22px} .nav a{font-size:13px;color:var(--dim)} .nav a:hover{color:var(--fg)}
+  .crumb{font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.08em}
+  .crumb .accent{color:var(--accent)}
+
+  .intro{padding:72px 28px 40px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .intro::before{content:"";position:absolute;inset:0;background:radial-gradient(1000px 400px at 70% 30%,rgba(255,106,31,.12),transparent 60%);pointer-events:none}
+  .intro-inner{max-width:1240px;margin:0 auto;position:relative}
+  .intro h1{font-family:var(--serif);font-size:clamp(42px,5.5vw,72px);font-weight:600;letter-spacing:-.02em;margin:16px 0 20px;max-width:900px;line-height:1.02}
+  .intro h1 em{font-style:italic;color:var(--accent)}
+  .intro p{color:var(--dim);font-size:18px;max-width:680px;line-height:1.55;margin:0}
+
+  .cases{max-width:1240px;margin:0 auto;padding:24px 28px 96px}
+  .case{display:grid;grid-template-columns:340px 1fr;gap:56px;padding:64px 0;border-bottom:1px solid var(--line)}
+  .case:last-child{border-bottom:none}
+  .case .lead .id{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.14em;margin-bottom:14px}
+  .case .lead h2{font-family:var(--serif);font-size:40px;font-weight:600;letter-spacing:-.015em;margin:0 0 14px;line-height:1.05}
+  .case .lead h2 em{font-style:italic;color:var(--accent)}
+  .case .lead p.q{font-family:var(--serif);font-size:19px;font-style:italic;line-height:1.4;border-left:2px solid var(--accent);padding:2px 0 2px 16px;margin:0 0 18px;color:var(--fg)}
+  .case .lead p.sub{color:var(--dim);font-size:14px;line-height:1.55;margin:0}
+
+  .answer{border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.02);overflow:hidden}
+  .answer-head{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line)}
+  .answer-head .label{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em}
+  .answer-head .label.accent{color:var(--accent)}
+  .answer-body{padding:20px}
+
+  /* Lobbyist: entity graph */
+  .graph{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;align-items:center;padding:20px 0}
+  .node{border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center;position:relative}
+  .node .n{font-family:var(--serif);font-size:18px;font-weight:600}
+  .node .t{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.08em;margin-top:4px}
+  .node.hub{border-color:var(--accent);background:rgba(255,106,31,.08)}
+  .node.hub .n{color:var(--accent)}
+  .flow{font-family:var(--mono);font-size:9px;color:var(--accent);text-align:center;padding:6px 0;letter-spacing:.08em}
+  .flow .dollar{color:var(--fg);font-weight:500;font-size:11px}
+  .stat-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
+  .stat-row:first-of-type{border-top:none}
+  .stat-row .v{font-family:var(--mono);font-size:12px;color:var(--accent)}
+
+  /* Physician: proximity map */
+  .map{position:relative;aspect-ratio:2/1;background:#0E0E10;border-radius:8px;overflow:hidden;margin-bottom:14px;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:24px 24px}
+  .pin{position:absolute;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%)}
+  .pin.poh{background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .pin.poh::after{content:"POH";position:absolute;left:18px;top:-2px;font-family:var(--mono);font-size:9px;color:var(--accent);letter-spacing:.1em;white-space:nowrap}
+  .pin.host{background:#fff;opacity:.4;width:10px;height:10px}
+  .pin.proposed{border:2px dashed var(--accent);width:20px;height:20px;background:transparent}
+  .pin.proposed::after{content:"YOU";position:absolute;left:24px;top:-2px;font-family:var(--mono);font-size:9px;color:var(--fg);letter-spacing:.1em;white-space:nowrap}
+  .ring{position:absolute;border:1px dashed rgba(255,106,31,.35);border-radius:50%;transform:translate(-50%,-50%)}
+
+  /* Lawmaker: ally ranking */
+  .ally{display:grid;grid-template-columns:30px 1fr 90px 60px;gap:12px;padding:12px 0;border-top:1px dashed var(--line);align-items:center;font-size:13px}
+  .ally:first-of-type{border-top:none}
+  .ally .r{font-family:var(--mono);font-size:10px;color:var(--dim)}
+  .ally .name{font-family:var(--serif);font-weight:600}
+  .ally .name .d{color:var(--dim);font-family:var(--mono);font-size:10px;margin-left:8px;letter-spacing:.08em}
+  .ally .score{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+  .ally .score .f{background:var(--accent);height:100%}
+  .ally .pct{font-family:var(--mono);font-size:11px;color:var(--accent);text-align:right}
+
+  /* Voter: district card */
+  .district{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stat{padding:20px;border-right:1px solid var(--line)}
+  .stat:last-child{border-right:none}
+  .stat .k{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em;margin-bottom:6px}
+  .stat .v{font-family:var(--serif);font-size:32px;font-weight:600;line-height:1}
+  .stat .v .a{color:var(--accent)}
+  .explainer{padding:20px 0 0;color:var(--dim);font-size:14px;line-height:1.55}
+  .explainer b{color:var(--fg);font-weight:500}
+
+  @media (max-width:900px){
+    .case{grid-template-columns:1fr;gap:24px}
+    .graph{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+  <header class="top">
+    <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
+    <div class="crumb"><a>CONSOLE</a> / <span class="accent">USE CASES</span></div>
+    <nav class="nav"><a>Desks</a><a>Dossiers</a><a>Method</a></nav>
+  </header>
+
+  <section class="intro">
+    <div class="intro-inner">
+      <span class="mono">FOUR READERS · FOUR VIEWS · ONE PAPER TRAIL</span>
+      <h1>Same intelligence. Four <em>different questions</em>.</h1>
+      <p>The lobbyist, the physician, the lawmaker, and the regular voter are all asking variations of the same question — <em>follow the money</em>. RojasReport answers all four from the same underlying registries, with a different lens on top.</p>
+    </div>
+  </section>
+
+  <div class="cases">
+
+    <!-- 01 Lobbyist -->
+    <div class="case">
+      <div class="lead">
+        <div class="id">READER / 01 · THE LOBBYIST</div>
+        <h2>You need to know <em>who pays whom</em>.</h2>
+        <p class="q">Who does AHIP, AHA, and Abbott Labs pay — and who writes the checks back?</p>
+        <p class="sub">Every trade association, hospital system, insurer, and manufacturer has a card. Donor graphs are cross‑referenced with lobbying disclosures and revolving‑door chronologies. Twenty years deep, de‑duplicated, time‑stamped, linked to source filings.</p>
+      </div>
+      <div class="answer">
+        <div class="answer-head"><span class="label">LOBBYIST VIEW · ENTITY GRAPH</span><span class="label accent">AHIP · 2026 YTD</span></div>
+        <div class="answer-body">
+          <div class="graph">
+            <div class="node"><div class="n">Abbott Labs</div><div class="t">MANUFACTURER</div></div>
+            <div class="node hub"><div class="n">AHIP</div><div class="t">TRADE ASSOC.</div></div>
+            <div class="node"><div class="n">CMS</div><div class="t">AGENCY</div></div>
+          </div>
+          <div class="flow">PAYS <span class="dollar">$2.4M</span> → · ← <span class="dollar">12 HIRES</span> REVOLVES</div>
+          <div class="stat-row"><span>Lobbying spend (YTD)</span><span class="v">$8.4M</span></div>
+          <div class="stat-row"><span>Disclosed clients</span><span class="v">47 payers</span></div>
+          <div class="stat-row"><span>CMS alumni on staff</span><span class="v">12</span></div>
+          <div class="stat-row"><span>Bills lobbied · 2026</span><span class="v">63</span></div>
+          <div class="stat-row"><span>Cross‑refs</span><span class="v">PhRMA · AHA · BCBSA</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 Physician -->
+    <div class="case">
+      <div class="lead">
+        <div class="id">READER / 02 · THE PHYSICIAN</div>
+        <h2>You're weighing a <em>build decision</em>.</h2>
+        <p class="q">Can I build a micro‑hospital next to this POH — and who's going to try to block it?</p>
+        <p class="sub">Physician‑Owned Hospital directory with proximity maps, CMS penalty histories, referral‑network affiliations, and the health‑system competitors that have CON‑fought similar builds in this market. The answer's in the paper — we built the map.</p>
+      </div>
+      <div class="answer">
+        <div class="answer-head"><span class="label">PHYSICIAN VIEW · PROXIMITY · COLUMBUS OH</span><span class="label accent">7 MILE RADIUS</span></div>
+        <div class="answer-body">
+          <div class="map">
+            <div class="ring" style="left:50%;top:50%;width:72%;height:120%"></div>
+            <div class="ring" style="left:50%;top:50%;width:40%;height:70%"></div>
+            <div class="pin poh" style="left:48%;top:52%"></div>
+            <div class="pin host" style="left:22%;top:40%"></div>
+            <div class="pin host" style="left:68%;top:28%"></div>
+            <div class="pin host" style="left:78%;top:66%"></div>
+            <div class="pin host" style="left:30%;top:72%"></div>
+            <div class="pin proposed" style="left:58%;top:46%"></div>
+          </div>
+          <div class="stat-row"><span>Nearest POH</span><span class="v">0.8 mi · Cardinal Surgical</span></div>
+          <div class="stat-row"><span>Competing health systems</span><span class="v">4 (OhioHealth · Mount Carmel · …)</span></div>
+          <div class="stat-row"><span>CON state?</span><span class="v">No (deregulated 2023)</span></div>
+          <div class="stat-row"><span>CMS penalties · 12 mo</span><span class="v">0</span></div>
+          <div class="stat-row"><span>Prior CON fights in market</span><span class="v">6 · see docket</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 Lawmaker -->
+    <div class="case">
+      <div class="lead">
+        <div class="id">READER / 03 · THE LAWMAKER</div>
+        <h2>You're looking for an <em>ally</em>.</h2>
+        <p class="q">Who could be a co‑sponsor on 340B reform — and who already owes a favor?</p>
+        <p class="sub">Bill‑by‑bill co‑sponsorship networks. Committee seniority and gavel mechanics. Constituent hospital footprints by district. Donor overlap analysis. The map of who can move with you — and who needs to be traded with first.</p>
+      </div>
+      <div class="answer">
+        <div class="answer-head"><span class="label">LAWMAKER VIEW · ALLY SCORE · 340B REFORM</span><span class="label accent">TOP 6 · SENATE</span></div>
+        <div class="answer-body">
+          <div class="ally"><span class="r">01</span><span class="name">M. Bennet<span class="d">D · CO</span></span><div class="score"><div class="f" style="width:92%"></div></div><span class="pct">92</span></div>
+          <div class="ally"><span class="r">02</span><span class="name">J. Cassidy<span class="d">R · LA</span></span><div class="score"><div class="f" style="width:87%"></div></div><span class="pct">87</span></div>
+          <div class="ally"><span class="r">03</span><span class="name">M. Hassan<span class="d">D · NH</span></span><div class="score"><div class="f" style="width:81%"></div></div><span class="pct">81</span></div>
+          <div class="ally"><span class="r">04</span><span class="name">T. Tillis<span class="d">R · NC</span></span><div class="score"><div class="f" style="width:74%"></div></div><span class="pct">74</span></div>
+          <div class="ally"><span class="r">05</span><span class="name">C. Shaheen<span class="d">D · NH</span></span><div class="score"><div class="f" style="width:69%"></div></div><span class="pct">69</span></div>
+          <div class="ally"><span class="r">06</span><span class="name">B. Moran<span class="d">R · KS</span></span><div class="score"><div class="f" style="width:66%"></div></div><span class="pct">66</span></div>
+          <div class="stat-row" style="margin-top:18px"><span>Signal weighting</span><span class="v">prior co‑sponsorship · district hospital mix · donor overlap · committee seat</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 Voter -->
+    <div class="case">
+      <div class="lead">
+        <div class="id">READER / 04 · THE VOTER</div>
+        <h2>You just want to <em>understand</em>.</h2>
+        <p class="q">What is Abbott Labs spending in my district — and is my hospital sending me bills I don't owe?</p>
+        <p class="sub">District‑level dashboards. Hospital price transparency. Plain‑English explainers on surprise billing, 340B, the No Surprises Act. Written without jargon, linked to the filings it came from.</p>
+      </div>
+      <div class="answer">
+        <div class="answer-head"><span class="label">VOTER VIEW · YOUR DISTRICT · OH‑03</span><span class="label accent">FRANKLIN COUNTY</span></div>
+        <div class="answer-body">
+          <div class="district">
+            <div class="stat"><div class="k">PHARMA $ SPENT IN OH‑03</div><div class="v"><span class="a">$1.42M</span></div></div>
+            <div class="stat"><div class="k">HOSPITALS IN DISTRICT</div><div class="v">7</div></div>
+            <div class="stat"><div class="k">AVG. SURPRISE‑BILL DISPUTES / 10K VISITS</div><div class="v"><span class="a">38</span></div></div>
+            <div class="stat"><div class="k">340B PARTICIPATING PROVIDERS</div><div class="v">11</div></div>
+          </div>
+          <div class="explainer">
+            <b>Plain English:</b> Your district sees more surprise‑bill disputes per visit than the state average. That means if you got a bill that felt wrong, you're probably not alone — and the law is on your side. <a class="accent">Read "How to dispute a surprise bill" →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

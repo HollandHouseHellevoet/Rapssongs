@@ -10,7 +10,7 @@
 <style>
   :root{
     --bg:#0A0A0B; --fg:#F5F5F4; --dim:#8A8A88; --line:rgba(255,255,255,.08);
-    --accent:#FF6A1F; --live:#FF6A1F; --alert:#FF6A1F;
+    --accent:#FF6A1F;
     --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
     --mono:'Geist Mono',ui-monospace,Menlo,monospace;
     --serif:'Fraunces',ui-serif,Georgia,serif;
@@ -24,10 +24,11 @@
   .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
   .brand .mark span{transform:rotate(-45deg)}
 
-  .ticker{display:flex;align-items:center;gap:14px;padding:8px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
-  .ticker .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)}
-  .ticker-track{display:flex;gap:48px;white-space:nowrap;animation:scroll 60s linear infinite}
-  .ticker-track span em{color:var(--accent);font-style:normal} .ticker-track span b{color:var(--fg);font-weight:500}
+  .querybar{display:flex;align-items:center;gap:14px;padding:10px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
+  .querybar .q{color:var(--accent);font-weight:500;letter-spacing:.1em;margin-right:14px}
+  .query-track{display:flex;gap:44px;white-space:nowrap;animation:scroll 80s linear infinite}
+  .query-track span em{color:var(--accent);font-style:normal;margin-right:8px}
+  .query-track span b{color:var(--fg);font-weight:500;font-family:var(--sans);font-size:12px;text-transform:none;letter-spacing:normal}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
   .hero{position:relative;padding:96px 28px;border-bottom:1px solid var(--line);overflow:hidden}
@@ -35,18 +36,21 @@
   .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse at center,black 40%,transparent 80%);opacity:.4}
   .hero-inner{position:relative;max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
   .pill{border:1px solid var(--accent);color:var(--accent);padding:3px 10px;border-radius:999px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;display:inline-block;margin-bottom:18px}
-  h1{font-family:var(--serif);font-weight:600;font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.02em;margin:0 0 22px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(44px,6.4vw,88px);line-height:.98;letter-spacing:-.02em;margin:0 0 22px}
   h1 em{font-style:italic;color:var(--accent)}
-  .lede{font-size:18px;color:var(--dim);max-width:520px;line-height:1.5}
+  .lede{font-size:18px;color:var(--dim);max-width:520px;line-height:1.55}
 
-  .hud{border:1px solid var(--line);border-radius:10px;padding:20px;background:rgba(255,255,255,.02)}
-  .hud-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-  .hud-head .live{color:var(--accent);font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:6px}
-  .hud-head .live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .hud-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
-  .hud-row:first-of-type{border-top:none}
-  .hud-row .src{font-family:var(--mono);font-size:10px;color:var(--dim)} .hud-row b{font-weight:500}
+  .entity{border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.02);overflow:hidden}
+  .entity-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+  .entity-head .label-s{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.12em}
+  .entity-head .updated{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:.08em}
+  .entity-title{padding:18px;border-bottom:1px solid var(--line)}
+  .entity-title h4{margin:0 0 4px;font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.01em}
+  .entity-title .sub{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.08em}
+  .entity-body{padding:18px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-top:1px dashed var(--line);font-size:13px}
+  .row:first-of-type{border-top:none}
+  .row .v{font-family:var(--mono);font-size:12px;color:var(--accent)}
 
   .swatch{position:fixed;bottom:14px;right:14px;display:flex;gap:6px;background:rgba(0,0,0,.6);padding:8px;border-radius:8px;border:1px solid var(--line)}
   .swatch span{width:24px;height:24px;border-radius:4px;display:block}
@@ -57,35 +61,38 @@
   <div class="label">IDENTITY · SIGNAL · AMBER</div>
   <header class="top">
     <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
-    <nav class="nav"><a>CONSOLE</a><a>DESKS</a><a>DOSSIERS</a><a>LIVE</a></nav>
+    <nav class="nav"><a>DESKS</a><a>DOSSIERS</a><a>REGISTRIES</a><a>METHOD</a></nav>
   </header>
-  <div class="ticker">
-    <span class="dot"></span><span class="mono">LIVE // INTEL</span>
-    <div class="ticker-track">
-      <span><em>WAYSANDMEANS //</em> <b>HR 4183 markup</b> at 09:00</span>
-      <span><em>POH //</em> <b>14p oversight memo</b> leaked</span>
-      <span><em>SIGNAL //</em> Cloture <b>63‑37</b></span>
-      <span><em>FILINGS //</em> 312 disclosures, <b>+18% w/w</b></span>
-      <span><em>WAYSANDMEANS //</em> <b>HR 4183 markup</b> at 09:00</span>
-      <span><em>POH //</em> <b>14p oversight memo</b> leaked</span>
-      <span><em>SIGNAL //</em> Cloture <b>63‑37</b></span>
-      <span><em>FILINGS //</em> 312 disclosures, <b>+18% w/w</b></span>
+  <div class="querybar">
+    <span class="q">QUESTIONS WE ANSWER /</span>
+    <div class="query-track">
+      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
+      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
     </div>
   </div>
   <section class="hero">
     <div class="hero-grid"></div>
     <div class="hero-inner">
       <div>
-        <span class="pill">OPS‑01 // INTELLIGENCE</span>
-        <h1>The room that hears it <em>first</em>.</h1>
-        <p class="lede">Single accent. Single signal. Amber on black, used the way HUD systems use it — as <span class="accent">alert</span>, not as ornament.</p>
+        <span class="pill">STANDING INTELLIGENCE · HEALTHCARE</span>
+        <h1>Who pays <em>whom</em>.<br>We've done the reading.</h1>
+        <p class="lede">Single accent. Single signal. Amber on black, used the way HUD systems use it — as emphasis in a reference registry, not as decoration.</p>
       </div>
-      <div class="hud">
-        <div class="hud-head"><span class="mono">SECTOR // NOW</span><span class="live">LIVE</span></div>
-        <div class="hud-row"><div><b>Ways &amp; Means markup</b><div class="src">waysandmeans.rojasreport</div></div><span class="mono accent">09:00</span></div>
-        <div class="hud-row"><div><b>POH oversight drop</b><div class="src">poh.rojasreport</div></div><span class="mono accent">+14p</span></div>
-        <div class="hud-row"><div><b>Senate cloture</b><div class="src">signal desk</div></div><span class="mono">63‑37</span></div>
-        <div class="hud-row"><div><b>New filings (24h)</b><div class="src">filings desk</div></div><span class="mono">312</span></div>
+      <div class="entity">
+        <div class="entity-head"><span class="label-s">ENTITY CARD · AHIP</span><span class="updated">INDEXED · APR 13</span></div>
+        <div class="entity-title"><h4>AHIP</h4><div class="sub">TRADE ASSOCIATION · HEALTH INSURANCE</div></div>
+        <div class="entity-body">
+          <div class="row"><span>Lobbying (YTD)</span><span class="v">$8.4M</span></div>
+          <div class="row"><span>Disclosed clients</span><span class="v">47 payers</span></div>
+          <div class="row"><span>CMS revolving‑door hires</span><span class="v">12</span></div>
+          <div class="row"><span>Cross‑refs</span><span class="v">PhRMA · AHA · BCBSA</span></div>
+        </div>
       </div>
     </div>
   </section>
