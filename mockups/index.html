@@ -21,21 +21,49 @@
   .mono{font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;font-size:11px;color:var(--dim)}
   .accent{color:var(--accent)}
 
-  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,10,11,.85);backdrop-filter:blur(8px);z-index:10}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
-  .brand .mark{width:22px;height:22px;border:1px solid var(--accent);display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-family:var(--mono);font-size:10px}
-  .brand .mark span{transform:rotate(-45deg)}
-  .nav{display:flex;gap:22px}
-  .nav a{font-size:13px;color:var(--dim)} .nav a:hover{color:var(--fg)}
-  .cmdk{font-family:var(--mono);font-size:11px;border:1px solid var(--line);padding:6px 10px;border-radius:6px;color:var(--dim)}
-  .cmdk kbd{background:#1a1a1b;padding:1px 6px;border-radius:3px;margin-left:6px;color:var(--fg)}
+  /* ============================================================
+     CANONICAL HEADER · shared across rojasreport.com + all 23 subdomains
+     ============================================================ */
+  .rr-top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;border-bottom:1px solid var(--line);
+    position:sticky;top:0;background:rgba(10,10,11,.88);backdrop-filter:blur(10px);z-index:10;gap:24px
+  }
+  .rr-brand{display:flex;align-items:center;gap:12px;min-width:0}
+  .rr-brand .mark{
+    width:24px;height:24px;border:1.5px solid var(--accent);
+    display:grid;place-items:center;transform:rotate(45deg);
+    color:var(--accent);font-family:var(--mono);font-size:10px;font-weight:600;flex-shrink:0
+  }
+  .rr-brand .mark span{transform:rotate(-45deg)}
+  .rr-brand .wordmark{font-weight:700;letter-spacing:.02em;font-size:15px}
+  .rr-brand .sep{color:var(--line);margin:0 6px;font-family:var(--mono);font-size:13px}
+  .rr-brand .subdomain{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.14em}
 
-  /* Question strip — replaces the "breaking news" ticker */
-  .querybar{display:flex;align-items:center;gap:14px;padding:10px 28px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden}
-  .querybar .q{color:var(--accent);font-weight:500;margin-right:14px;letter-spacing:.1em}
-  .query-track{display:flex;gap:44px;white-space:nowrap;animation:scroll 80s linear infinite}
-  .query-track span b{color:var(--fg);font-weight:500;font-family:var(--sans);font-size:12px;text-transform:none;letter-spacing:normal}
-  .query-track span em{color:var(--accent);font-style:normal;margin-right:8px}
+  .rr-nav{display:flex;gap:24px}
+  .rr-nav a{font-size:13px;color:var(--dim);transition:color .15s}
+  .rr-nav a:hover,.rr-nav a.active{color:var(--fg)}
+  .rr-nav a.active{position:relative}
+  .rr-nav a.active::after{content:"";position:absolute;left:0;right:0;bottom:-19px;height:1px;background:var(--accent)}
+
+  .rr-cmdk{
+    font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+    padding:7px 12px;border-radius:6px;color:var(--dim);display:flex;align-items:center;gap:10px;white-space:nowrap
+  }
+  .rr-cmdk kbd{background:#1a1a1b;padding:1px 6px;border-radius:3px;color:var(--fg);font-family:inherit}
+
+  .rr-context{
+    display:flex;align-items:center;gap:16px;padding:10px 28px;
+    border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--dim);overflow:hidden
+  }
+  .rr-context .leader{color:var(--accent);font-weight:500;letter-spacing:.1em;flex-shrink:0}
+  .rr-context .crumb a{color:var(--dim)} .rr-context .crumb .accent{color:var(--accent)}
+  .rr-context .crumb span{margin:0 10px;color:var(--line)}
+  .rr-context .badge{border:1px solid var(--accent);color:var(--accent);padding:3px 8px;border-radius:999px;letter-spacing:.1em;font-size:10px}
+
+  .rr-query-track{display:flex;gap:44px;white-space:nowrap;animation:scroll 80s linear infinite}
+  .rr-query-track span em{color:var(--accent);font-style:normal;margin-right:8px}
+  .rr-query-track span b{color:var(--fg);font-weight:500;font-family:var(--sans);font-size:12px;text-transform:none;letter-spacing:normal}
   @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
   .hero{position:relative;padding:96px 28px 72px;border-bottom:1px solid var(--line);overflow:hidden}
@@ -113,37 +141,92 @@
   .dossier p{color:var(--dim);font-size:14px;line-height:1.55;margin:0}
   .dossier .byline{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:12px;letter-spacing:.08em}
 
-  footer{padding:48px 28px;display:flex;justify-content:space-between;color:var(--dim);font-family:var(--mono);font-size:11px;letter-spacing:.08em}
+  /* ============================================================
+     CANONICAL FOOTER · shared across rojasreport.com + all 23 subdomains
+     ============================================================ */
+  .rr-sisters{border-top:1px solid var(--line);padding:20px 28px;overflow:hidden;background:linear-gradient(180deg,transparent,rgba(255,106,31,.02))}
+  .rr-sisters .head{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.14em;margin-bottom:14px}
+  .rr-sisters .strip{display:flex;flex-wrap:wrap;gap:6px}
+  .rr-sisters a{
+    font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+    padding:5px 10px;border:1px solid var(--line);border-radius:4px;color:var(--dim);transition:all .15s
+  }
+  .rr-sisters a:hover{color:var(--fg);border-color:var(--dim)}
+  .rr-sisters a.current{color:var(--accent);border-color:var(--accent);background:rgba(255,106,31,.06)}
+  .rr-sisters a.soon{opacity:.4}
+  .rr-sisters a.soon::after{content:" · SOON";font-size:9px;opacity:.6}
+
+  .rr-cols{
+    display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:48px;
+    padding:48px 28px;border-top:1px solid var(--line)
+  }
+  .rr-cols .col h4{font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.14em;margin:0 0 18px;font-weight:500}
+  .rr-cols .col ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+  .rr-cols .col ul a{color:var(--fg);font-size:14px;transition:color .15s}
+  .rr-cols .col ul a:hover{color:var(--accent)}
+  .rr-cols .col.about p{color:var(--dim);font-size:13px;line-height:1.55;margin:0 0 18px}
+  .rr-cols .col.about .motto{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--fg);line-height:1.2;margin:0 0 14px;letter-spacing:-.01em}
+  .rr-cols .col.about .motto em{color:var(--accent)}
+
+  .rr-foot-meta{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 28px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em
+  }
+  .rr-foot-meta .left{display:flex;align-items:center;gap:14px}
+  .rr-foot-meta .left .mark-sm{
+    width:16px;height:16px;border:1px solid var(--accent);
+    display:grid;place-items:center;transform:rotate(45deg);color:var(--accent);font-size:7px;font-weight:600
+  }
+  .rr-foot-meta .left .mark-sm span{transform:rotate(-45deg)}
+  .rr-foot-meta .right{display:flex;gap:18px}
+  .rr-foot-meta .right a:hover{color:var(--accent)}
 
   @media (max-width:900px){
     .hero-inner,.desks,.dossiers,.personas{grid-template-columns:1fr}
-    .nav{display:none}
+    .rr-nav{display:none}
+    .rr-cols{grid-template-columns:1fr 1fr;gap:32px}
+  }
+  @media (max-width:600px){
+    .rr-cols{grid-template-columns:1fr}
+    .rr-brand .subdomain,.rr-brand .sep{display:none}
   }
 </style>
 </head>
 <body>
 
-  <header class="top">
-    <div class="brand"><div class="mark"><span>RR</span></div> ROJASREPORT</div>
-    <nav class="nav">
-      <a>The Desks</a><a>Dossiers</a><a>Registries</a><a>Method</a><a>About</a>
-    </nav>
-    <div class="cmdk">Look up an entity <kbd>⌘K</kbd></div>
-  </header>
-
-  <div class="querybar">
-    <span class="q">QUESTIONS WE ANSWER /</span>
-    <div class="query-track">
-      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
-      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
-      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
-      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
-      <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
-      <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
-      <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
-      <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
+  <!-- CANONICAL HEADER ================================================== -->
+  <header>
+    <div class="rr-top">
+      <div class="rr-brand">
+        <div class="mark"><span>RR</span></div>
+        <span class="wordmark">ROJASREPORT</span>
+        <span class="sep">//</span>
+        <span class="subdomain">CONSOLE</span>
+      </div>
+      <nav class="rr-nav">
+        <a class="active">Desks</a>
+        <a>Dossiers</a>
+        <a>Registries</a>
+        <a>Method</a>
+        <a>About</a>
+      </nav>
+      <div class="rr-cmdk">Look up an entity <kbd>⌘K</kbd></div>
     </div>
-  </div>
+    <div class="rr-context">
+      <span class="leader">QUESTIONS WE ANSWER /</span>
+      <div class="rr-query-track">
+        <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+        <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+        <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+        <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
+        <span><em>LOBBYIST →</em><b>Who does AHIP pay — and who pays AHIP?</b></span>
+        <span><em>PHYSICIAN →</em><b>Can I build a micro‑hospital next to this POH?</b></span>
+        <span><em>LAWMAKER →</em><b>Who could be an ally on 340B reform?</b></span>
+        <span><em>VOTER →</em><b>What is Abbott Labs spending in my district?</b></span>
+      </div>
+    </div>
+  </header>
 
   <section class="hero">
     <div class="hero-grid"></div>
@@ -301,9 +384,85 @@
     </div>
   </section>
 
+  <!-- CANONICAL FOOTER ================================================== -->
   <footer>
-    <span>ROJASREPORT // STANDING INTELLIGENCE</span>
-    <span>© 2026 · VERSION 2026.Q2</span>
+    <div class="rr-sisters">
+      <div class="head">SISTER SITES · 23 DESKS OF STANDING INTELLIGENCE</div>
+      <div class="strip">
+        <a>WAYSANDMEANS</a>
+        <a>POH</a>
+        <a>ACADEMIC</a>
+        <a>FAH</a>
+        <a>AHA</a>
+        <a>HAC</a>
+        <a>CON‑LAWS</a>
+        <a class="soon">AHIP</a>
+        <a class="soon">PHARMA</a>
+        <a class="soon">CMS</a>
+        <a class="soon">FDA</a>
+        <a class="soon">PHYSICIANS</a>
+        <a class="soon">LOBBYISTS</a>
+        <a class="soon">DONORS</a>
+        <a class="soon">STATES</a>
+        <a class="soon">COURTS</a>
+        <a class="soon">DEVICES</a>
+        <a class="soon">DIGITAL</a>
+        <a class="soon">RURAL</a>
+        <a class="soon">MENTAL</a>
+        <a class="soon">MATERNAL</a>
+        <a class="soon">SENIORS</a>
+        <a class="soon">BRIEFS</a>
+      </div>
+    </div>
+    <div class="rr-cols">
+      <div class="col about">
+        <p class="motto">Standing intelligence on <em>who pays whom</em> in American healthcare.</p>
+        <p>A reference console — not a newsfeed — for the lobbyist, the physician, the lawmaker, and the voter asking the same question from four angles.</p>
+      </div>
+      <div class="col">
+        <h4>FOR READERS</h4>
+        <ul>
+          <li><a>The Lobbyist</a></li>
+          <li><a>The Physician</a></li>
+          <li><a>The Lawmaker</a></li>
+          <li><a>The Voter</a></li>
+          <li><a>Use cases →</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>REGISTRIES</h4>
+        <ul>
+          <li><a>Ways &amp; Means</a></li>
+          <li><a>POH · Physician‑Owned Hospitals</a></li>
+          <li><a>Academic · AMCs</a></li>
+          <li><a>FAH / AHA / HAC</a></li>
+          <li><a>CON Laws (hub)</a></li>
+          <li><a>All 23 desks →</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>METHOD &amp; LEGAL</h4>
+        <ul>
+          <li><a>Methodology</a></li>
+          <li><a>Corrections</a></li>
+          <li><a>Attribution</a></li>
+          <li><a>Privacy</a></li>
+          <li><a>Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="rr-foot-meta">
+      <div class="left">
+        <div class="mark-sm"><span>RR</span></div>
+        <span>ROJASREPORT // STANDING INTELLIGENCE · © 2026</span>
+      </div>
+      <div class="right">
+        <a>VERSION 2026.Q2</a>
+        <a>PRESS</a>
+        <a>CONTACT</a>
+        <a>GITHUB</a>
+      </div>
+    </div>
   </footer>
 
 </body>
